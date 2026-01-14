@@ -4,8 +4,7 @@
 #include <iostream>
 #include <map>
 #include <string>
-#include <sys/time.h>
-#include <unistd.h>
+#include <chrono>
 
 namespace exafmm_t {
   static const int stringLength = 20;           //!< Length of formatted string
@@ -13,8 +12,9 @@ namespace exafmm_t {
   static const int wait = 100;                  //!< Waiting time between output of different ranks
   static const int dividerLength = stringLength + decimal + 9;  // length of output section divider
   long long flop = 0;
-  timeval time;
-  std::map<std::string, timeval> timer;
+  using time_point = std::chrono::steady_clock::time_point;
+  time_point time;
+  std::map<std::string, time_point> timer;
 
   void print(std::string s) {
     // if (!VERBOSE | (MPIRANK != 0)) return;
@@ -48,14 +48,13 @@ namespace exafmm_t {
   }
 
   void start(std::string event) {
-    gettimeofday(&time, NULL);
-    timer[event] = time;
+    timer[event] = std::chrono::high_resolution_clock::now();
   }
 
   double stop(std::string event, bool verbose=true) {
-    gettimeofday(&time, NULL);
-    double eventTime = time.tv_sec - timer[event].tv_sec +
-      (time.tv_usec - timer[event].tv_usec) * 1e-6;
+    time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(time - timer[event]);
+    double eventTime = static_cast<double>(duration.count()) * 1e-6;
     if (verbose)
       print(event, eventTime);
     return eventTime;

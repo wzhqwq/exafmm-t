@@ -1,6 +1,15 @@
 #ifndef align_h
 #define align_h
+
+#ifdef _WIN32
+#define posix_memalign(p, a, s) (((*(p)) = _aligned_malloc((s), (a))), *(p) ? 0 : errno)
+#define free(p) _aligned_free(p)
+#include <errno.h>
+#include <malloc.h>
+#else
 #include <cstdlib>
+#endif
+
 #include <memory>
 
 template <typename T, size_t NALIGN>
