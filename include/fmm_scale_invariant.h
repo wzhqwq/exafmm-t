@@ -415,11 +415,11 @@ namespace exafmm_t {
 
       // allocate memory
       std::vector<T> all_up_equiv, all_dn_equiv;
-      all_up_equiv.reserve(nnodes*nsurf_);   // use reserve() to avoid the overhead of calling constructor
-      all_dn_equiv.reserve(nnodes*nsurf_);   // use pointer instead of iterator to access elements 
+      all_up_equiv.resize(nnodes*nsurf_);   // use resize() to avoid the overhead of calling constructor
+      all_dn_equiv.resize(nnodes*nsurf_);   // use pointer instead of iterator to access elements
       AlignedVec fft_in, fft_out;
-      fft_in.reserve(m2ldata.fft_offset.size()*fft_size);
-      fft_out.reserve(m2ldata.ifft_offset.size()*fft_size);
+      fft_in.resize(m2ldata.fft_offset.size()*fft_size);
+      fft_out.resize(m2ldata.ifft_offset.size()*fft_size);
 
       // gather all upward equivalent charges
 #pragma omp parallel for collapse(2)
