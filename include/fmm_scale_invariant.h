@@ -399,10 +399,14 @@ namespace exafmm_t {
     }
     
     void fft_up_equiv(std::vector<size_t>& fft_offset,
-                      RealVec& all_up_equiv, AlignedVec& fft_in) {}
-    
+                      std::vector<T>& all_up_equiv, AlignedVec& fft_in) {
+      throw new std::runtime_error("fft_up_equiv not implemented");
+    }
+
     void ifft_dn_check(std::vector<size_t>& ifft_offset, RealVec& ifft_scal,
-                       AlignedVec& fft_out, RealVec& all_dn_equiv) {}
+                       AlignedVec& fft_out, std::vector<T>& all_dn_equiv) {
+      throw new std::runtime_error("ifft_dn_check not implemented");
+    }
 
     void M2L(Nodes<T>& nodes) {
       const int nsurf_ = this->nsurf;
