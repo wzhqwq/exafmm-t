@@ -37,7 +37,7 @@ namespace exafmm_t {
     //! Setup the sizes of precomputation matrices
     void initialize_matrix() {
       size_t size = this->nfreq * 2 * NCHILD * NCHILD;  // size of each M2L precomputation matrix
-      int& nsurf_ = this->nsurf;
+      const int nsurf_ = this->nsurf;
       matrix_UC2E_U.resize(nsurf_*nsurf_);
       matrix_UC2E_V.resize(nsurf_*nsurf_);
       matrix_DC2E_U.resize(nsurf_*nsurf_);
@@ -49,7 +49,7 @@ namespace exafmm_t {
 
     //! Precompute M2M and L2L
     void precompute_M2M() {
-      int& nsurf_ = this->nsurf;
+      const int nsurf_ = this->nsurf;
       int npos = REL_COORD[M2M_Type].size();  // number of relative positions
       int level = 0;
       real_t parent_coord[3] = {0, 0, 0};
@@ -161,7 +161,7 @@ namespace exafmm_t {
 
     //! P2M operator
     void P2M(NodePtrs<T>& leafs) {
-      int& nsurf_ = this->nsurf;
+      const int nsurf_ = this->nsurf;
       real_t c[3] = {0,0,0};
       std::vector<RealVec> up_check_surf;
       up_check_surf.resize(this->depth+1);
@@ -196,7 +196,7 @@ namespace exafmm_t {
 
     //! L2P operator
     void L2P(NodePtrs<T>& leafs) {
-      int& nsurf_ = this->nsurf;
+      const int nsurf_ = this->nsurf;
       real_t c[3] = {0.0};
       std::vector<RealVec> dn_equiv_surf;
       dn_equiv_surf.resize(this->depth+1);
@@ -231,7 +231,7 @@ namespace exafmm_t {
 
     //! M2M operator
     void M2M(Node<T>* node) {
-      int& nsurf_ = this->nsurf;
+      const int nsurf_ = this->nsurf;
       if (node->is_leaf) return;
       for (int octant=0; octant<8; octant++) {
         if (node->children[octant])
@@ -254,7 +254,7 @@ namespace exafmm_t {
 
     //! L2L operator
     void L2L(Node<T>* node) {
-      int& nsurf_ = this->nsurf;
+      const int nsurf_ = this->nsurf;
       if (node->is_leaf) return;
       // evaluate child's downward check potential from parent's downward check potential
       for (int octant=0; octant<8; octant++) {
@@ -275,7 +275,7 @@ namespace exafmm_t {
     }
 
     void M2L_setup(NodePtrs<T> nonleafs) {
-      int& nsurf_ = this->nsurf;
+      const int nsurf_ = this->nsurf;
       int npos = REL_COORD[M2L_Type].size();  // number of M2L relative positions
 
       // construct lists of source nodes and target nodes for M2L operator
@@ -405,9 +405,9 @@ namespace exafmm_t {
                        AlignedVec& fft_out, RealVec& all_dn_equiv) {}
 
     void M2L(Nodes<T>& nodes) {
-      int& nsurf_ = this->nsurf;
+      const int nsurf_ = this->nsurf;
       size_t fft_size = 2 * NCHILD * this->nfreq;
-      int nnodes = nodes.size();
+      const int nnodes = nodes.size();
 
       // allocate memory
       std::vector<T> all_up_equiv, all_dn_equiv;
@@ -447,7 +447,7 @@ namespace exafmm_t {
   void FmmScaleInvariant<real_t>::precompute_check2equiv() {
     int level = 0;
     real_t c[3] = {0, 0, 0};
-    int& nsurf_ = this->nsurf;
+    const int nsurf_ = this->nsurf;
 
     // compute kernel matrix
     RealVec up_check_surf = surface(this->p, this->r0, level, c, 2.95);
@@ -479,7 +479,7 @@ namespace exafmm_t {
   void FmmScaleInvariant<complex_t>::precompute_check2equiv() {
     int level = 0;
     real_t c[3] = {0, 0, 0};
-    int& nsurf_ = this->nsurf;
+    const int nsurf_ = this->nsurf;
 
     // compute kernel matrix
     RealVec up_check_surf = surface(this->p, this->r0, level, c, 2.95);
@@ -517,8 +517,8 @@ namespace exafmm_t {
   template <>
   void FmmScaleInvariant<real_t>::precompute_M2L() {
     int n1 = this->p * 2;
-    int& nconv_ = this->nconv;
-    int& nfreq_ = this->nfreq;
+    const int nconv_ = this->nconv;
+    const int nfreq_ = this->nfreq;
     std::vector<RealVec> matrix_M2L_Helper(REL_COORD[M2L_Helper_Type].size(),
                                            RealVec(2*nfreq_));
     // create fft plan
@@ -560,9 +560,9 @@ namespace exafmm_t {
   template <>
   void FmmScaleInvariant<real_t>::fft_up_equiv(std::vector<size_t>& fft_offset,
                                                RealVec& all_up_equiv, AlignedVec& fft_in) {
-    int& nsurf_ = this->nsurf;
-    int& nconv_ = this->nconv;
-    int& nfreq_ = this->nfreq;
+    const int nsurf_ = this->nsurf;
+    const int nconv_ = this->nconv;
+    const int nfreq_ = this->nfreq;
     int n1 = 2 * this->p;
     auto map = generate_surf2conv_up(this->p);
 
@@ -606,9 +606,9 @@ namespace exafmm_t {
   template <>
   void FmmScaleInvariant<real_t>::ifft_dn_check(std::vector<size_t>& ifft_offset, RealVec& ifft_scal,
                        AlignedVec& fft_out, RealVec& all_dn_equiv) {
-    int& nsurf_ = this->nsurf;
-    int& nconv_ = this->nconv;
-    int& nfreq_ = this->nfreq;
+    const int nsurf_ = this->nsurf;
+    const int nconv_ = this->nconv;
+    const int nfreq_ = this->nfreq;
     int n1 = 2 * this->p;
     auto map = generate_surf2conv_dn(this->p);
 
