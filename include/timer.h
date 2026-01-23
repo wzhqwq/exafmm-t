@@ -12,7 +12,7 @@ namespace exafmm_t {
   static const int wait = 100;                  //!< Waiting time between output of different ranks
   static const int dividerLength = stringLength + decimal + 9;  // length of output section divider
   long long flop = 0;
-  using time_point = std::chrono::steady_clock::time_point;
+  using time_point = std::chrono::system_clock::time_point;
   time_point time;
   std::map<std::string, time_point> timer;
 
